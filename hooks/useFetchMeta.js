@@ -11,17 +11,21 @@ const useFetchMeta = (url) => {
 
   useEffect(() => {
     if (url) {
-      (async () => {
+      ;(async () => {
         setIsLoading(true)
         try {
           const res = await fetch(url)
           const data = await res.text()
-          setData(objectToArrayOfObject(parseData(data)))
+          const { title, logo, ...rest } = parseData(data)
+          const arrayOfObj = objectToArrayOfObject(rest)
+
+          setData({ title, logo, list: arrayOfObj })
           setIsLoading(false)
         } catch (err) {
+          setData(null)
           setError({
-            status:err?.status,
-            message:err?.message
+            status: err?.status,
+            message: err?.message,
           })
           setIsLoading(false)
         }

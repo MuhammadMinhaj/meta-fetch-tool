@@ -1,13 +1,5 @@
+import PropTypes from 'prop-types'
 import { List, ListItem } from '../../components/list'
-
-export const DataList = ({ data }) => {
-  return (
-    <div className="w-[50%] m-auto">
-      <h3 className="text-lg font-bold text-indigo-900">Meta Data</h3>
-      <List>{data?.map(handler)}</List>
-    </div>
-  )
-}
 
 const handler = (data, index, arr) => (
   <ListItem
@@ -17,3 +9,15 @@ const handler = (data, index, arr) => (
     disabledDivider={index === arr.length - 1}
   />
 )
+// Main DataList component
+export const DataList = ({ data }) => <List>{data?.map(handler)}</List>
+
+// Prop types
+DataList.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      value: PropTypes.string,
+    }),
+  ),
+}
