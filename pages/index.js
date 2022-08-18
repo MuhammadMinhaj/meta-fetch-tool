@@ -1,7 +1,18 @@
 import Head from 'next/head'
+import { useState } from 'react'
 import { DataList } from '../features/data-list/data-list'
 import { Search } from '../features/search/search'
-export default function Home() {
+import { useFetchMeta } from '../hooks'
+
+export default function MainPage() {
+  const [url, setUrl] = useState(null)
+  const { isLoading, data, error } = useFetchMeta(url)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setUrl(e.target.elements.url.value)
+  }
+
   return (
     <div className="container mx-auto py-5">
       <Head>
@@ -14,8 +25,9 @@ export default function Home() {
       </h1>
 
       <main className="py-5">
-        <Search />
-        <DataList />
+        <Search handleSubmit={handleSubmit} />
+        {isLoading && <h1 className="text-center">Loading...</h1>}
+        <DataList data={data}/>
       </main>
 
       <footer className="text-center text-base font-medium antialiased border-t-2 py-2">
