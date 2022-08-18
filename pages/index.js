@@ -3,14 +3,20 @@ import { useState } from 'react'
 import { Alert } from '../components/core'
 import { Brand } from '../features/brand/brand'
 import { DataList } from '../features/data-list/data-list'
+import { Footer } from '../features/footer/footer'
 import { Search } from '../features/search/search'
 import { useFetchMeta } from '../hooks'
 export default function MainPage() {
   const [url, setUrl] = useState(null)
-  const { isLoading, data, error } = useFetchMeta(url)
+  const { isLoading, data, error, resetData } = useFetchMeta(url)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, isReset) => {
     e.preventDefault()
+    if (isReset) {
+      e.target.reset()
+      resetData()
+      return
+    }
     setUrl(e.target.elements.url.value)
   }
 
@@ -26,26 +32,23 @@ export default function MainPage() {
       </h1>
 
       <main className="py-5 w-[60%] m-auto">
-        <Search handleSubmit={handleSubmit} />
-        {error?.message && <Alert text={error?.message} type="error" />}
+        <Search handleSubmit={handleSubmit} isReset={!!data} />
+        {error?.message && (
+          <Alert
+            text={error?.message}
+            type="error"
+            handleClickClear={() => {
+              setUrl(null)
+              resetData()
+            }}
+          />
+        )}
         {isLoading && <h1 className="text-3xl text-center py-5">Loading...</h1>}
         {data && <Brand imgSrc={data?.logo} title={data?.title} />}
         <DataList data={data?.list} />
       </main>
 
-      <footer className="text-center text-base font-medium antialiased border-t-2 py-2">
-        <span>
-          Developed by{' '}
-          <a
-            href="httspans://muhammadminhaj.github.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500"
-          >
-            Muhammad Minhaj
-          </a>
-        </span>
-      </footer>
+      <Footer />
     </div>
   )
 }

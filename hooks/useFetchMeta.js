@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { objectToArrayOfObject, parseData } from '../lib'
 
+const initError = {
+  status: null,
+  message: null,
+}
+
 const useFetchMeta = (url) => {
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState(null)
-  const [error, setError] = useState({
-    status: null,
-    message: null,
-  })
+  const [error, setError] = useState({ ...initError })
 
   useEffect(() => {
     if (url) {
@@ -20,6 +22,7 @@ const useFetchMeta = (url) => {
           const arrayOfObj = objectToArrayOfObject(rest)
 
           setData({ title, logo, list: arrayOfObj })
+          setError({ ...initError })
           setIsLoading(false)
         } catch (err) {
           setData(null)
@@ -27,16 +30,22 @@ const useFetchMeta = (url) => {
             status: err?.status,
             message: err?.message,
           })
+
           setIsLoading(false)
         }
       })()
     }
   }, [url])
-
+  const resetData = () => {
+    setData(null)
+    setIsLoading(false)
+    setError({ ...initError })
+  }
   return {
     isLoading,
     error,
     data,
+    resetData,
   }
 }
 

@@ -21,13 +21,21 @@ const borderClasses = {
   info: 'border-[#00bcd4]',
 }
 // Main alert component
-export const Alert = ({ type, text }) => {
+export const Alert = ({ type, text, handleClickClear }) => {
   return (
     <div
-      className={`font-mono text-xl border p-4 my-2 ${borderClasses[type]} rounded-lg`}
+      className={`font-mono text-xl border p-4 my-2 ${borderClasses[type]} rounded-lg flex justify-between items-center`}
     >
-      <span className={`font-bold ${textClasses[type]}`}>{contants[type]}</span>{' '}
-      <span className={textClasses[type]}>{text}</span>
+      <div>
+        <span className={`font-bold ${textClasses[type]}`}>
+          {contants[type]}
+        </span>{' '}
+        <span className={textClasses[type]}>{text}</span>
+      </div>
+
+      <span className="cursor-pointer" onClick={handleClickClear}>
+        Clear
+      </span>
     </div>
   )
 }
@@ -35,4 +43,5 @@ export const Alert = ({ type, text }) => {
 Alert.propTypes = {
   type: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
+  handleClickClear: PropTypes.func,
 }
